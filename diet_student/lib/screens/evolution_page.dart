@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../common/globals.dart' as globals;
 
 class EvolutionPage extends StatefulWidget {
   @override
@@ -12,7 +13,7 @@ class _EvolutionPageState extends State<EvolutionPage> {
       child: Text(
         "Evolution",
         style: TextStyle(
-          fontSize: 18,
+          fontSize: globals.textSize,
           fontWeight: FontWeight.w300,
           color: Colors.black,
         ),

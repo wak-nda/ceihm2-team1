@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../common/globals.dart' as globals;
 
 class ConsumptionPage extends StatefulWidget {
   @override
@@ -12,7 +13,7 @@ class _ConsumptionPageState extends State<ConsumptionPage> {
       child: Text(
         "Consommation",
         style: TextStyle(
-          fontSize: 18,
+          fontSize: globals.textSize,
           fontWeight: FontWeight.w300,
           color: Colors.black,
         ),

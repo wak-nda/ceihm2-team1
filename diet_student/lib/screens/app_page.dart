@@ -5,6 +5,8 @@ import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:fleva_icons/fleva_icons.dart';
 
 import 'home_page.dart';
+import 'profile.dart';
+import 'consumption_page.dart';
 
 class AppPage extends StatefulWidget {
   @override
@@ -16,8 +18,11 @@ class _AppPageState extends State<AppPage> {
   int _currentIndex = 0;
   List<Widget> _children = [
     HomePage(),
+    Profile(),
     ConsumptionPage(),
-    EvolutionPage(),
+    EvolutionPage()
+
+
   ];
 
   void _onTabTapped(int index) {
@@ -26,8 +31,10 @@ class _AppPageState extends State<AppPage> {
       _currentIndex = index;
       _children = [
         HomePage(),
+        Profile(),
         ConsumptionPage(),
-        EvolutionPage(),
+        EvolutionPage()
+
       ];
     });
   }
@@ -52,10 +59,15 @@ class _AppPageState extends State<AppPage> {
         children: _children,
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed, // Used to fix bug on screen
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(FlevaIcons.home),
             label: 'Accueil',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(FontAwesome5.user),
+            label: 'Profile',
           ),
           BottomNavigationBarItem(
             icon: Icon(FontAwesome5.hamburger),
