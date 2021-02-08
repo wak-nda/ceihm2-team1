@@ -8,7 +8,7 @@ const darkRedColor = Color(0xFFFA695C);
 const lightRedColor = Color(0xFFFD685A);
 const lightMidColor = Color(0xFFBD1A7D);
 const blueColor = Colors.blue;
-const lightGreenColor = Colors.lightGreen;
+const lightGreenColor = Colors.green;
 //const blueColor = Color(0xFFB3E5FC);
 
 const purpleGradient = LinearGradient(

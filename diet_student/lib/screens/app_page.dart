@@ -1,3 +1,4 @@
+import 'package:diet_student/common/values.dart';
 import 'package:diet_student/screens/consumption_page.dart';
 import 'package:diet_student/screens/evolution_page.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,7 @@ import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:fleva_icons/fleva_icons.dart';
 
 import 'home_page.dart';
-import 'profile.dart';
+import 'profile_page.dart';
 import 'consumption_page.dart';
 
 class AppPage extends StatefulWidget {
@@ -18,12 +19,15 @@ class _AppPageState extends State<AppPage> {
   int _currentIndex = 0;
   List<Widget> _children = [
     HomePage(),
-    Profile(),
     ConsumptionPage(),
-    EvolutionPage()
-
-
+    EvolutionPage(),
+    Profile()
   ];
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void _onTabTapped(int index) {
     setState(() {
@@ -31,11 +35,14 @@ class _AppPageState extends State<AppPage> {
       _currentIndex = index;
       _children = [
         HomePage(),
-        Profile(),
         ConsumptionPage(),
-        EvolutionPage()
-
+        EvolutionPage(),
+        Profile()
       ];
+      manualEntry = false;
+      backScan = false;
+      typeBarcode = false;
+      scanNotFound = false;
     });
   }
 
@@ -66,16 +73,16 @@ class _AppPageState extends State<AppPage> {
             label: 'Accueil',
           ),
           BottomNavigationBarItem(
-            icon: Icon(FontAwesome5.user),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(FontAwesome5.hamburger),
             label: 'Consommation',
           ),
           BottomNavigationBarItem(
             icon: Icon(FontAwesome5.chart_line),
             label: 'Evolution',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(FontAwesome5.user),
+            label: 'Profil',
           ),
         ],
         currentIndex: _currentIndex,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../common/globals.dart' as globals;
 
 class Profile extends StatefulWidget {
   @override
