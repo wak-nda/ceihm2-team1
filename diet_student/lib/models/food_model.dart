@@ -10,7 +10,7 @@ class FoodModel {
   final int idDaily;
 
   FoodModel({
-    @required this.id,
+    this.id,
     this.kcal,
     this.protein,
     this.carbohydrates,

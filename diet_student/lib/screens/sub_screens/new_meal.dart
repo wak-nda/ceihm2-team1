@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:diet_student/common/values.dart';
+import 'package:diet_student/models/food_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,7 +12,9 @@ class NewMealView extends StatefulWidget {
   @override
   _NewMealViewState createState() => _NewMealViewState();
 
-  NewMealView({Key key, }) : super(key: key);
+  NewMealView({
+    Key key,
+  }) : super(key: key);
 }
 
 class _NewMealViewState extends State<NewMealView>
@@ -156,17 +159,15 @@ class _NewMealViewState extends State<NewMealView>
     return GestureDetector(
       onTap: () async {
         barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-            "#004297",
-            "Retour",
-            true, ScanMode.BARCODE);
-        if (barcodeScanRes == "-1"){
+            "#004297", "Retour", true, ScanMode.BARCODE);
+        if (barcodeScanRes == "-1") {
           barcodeScanRes = "Code barre illisible?";
           backScan = true;
-        }else{
+        } else {
           //backScan = true;
           //typeBarcode = false;
           String res = await _addFoodByBarcode(barcodeScanRes);
-          if (res != null){
+          if (res != null) {
             //barcodeScanRes = res;
             print(res);
             typeBarcode = false;
@@ -175,8 +176,7 @@ class _NewMealViewState extends State<NewMealView>
             SnackBar snackbar = new SnackBar(
                 content: Text("Consommation enregistrée avec succès."));
             Scaffold.of(context).showSnackBar(snackbar);
-          }
-          else {
+          } else {
             scanNotFound = true;
             foodNotFound = "Aliment introuvable, essayez manuellement";
             typeBarcode = true;
@@ -221,7 +221,7 @@ class _NewMealViewState extends State<NewMealView>
 
   Widget _manualEntry() {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         manualEntry = !manualEntry;
         (context as Element).reassemble();
       },
@@ -260,8 +260,8 @@ class _NewMealViewState extends State<NewMealView>
     );
   }
 
-  Future<bool> _addFood(String calories, String proteins,
-      String carbohydrates, String lipids, String name) async {
+  Future<bool> _addFood(String calories, String proteins, String carbohydrates,
+      String lipids, String name) async {
     /*var address = host + foodRoute + user.id.toString();
     print(address);
     var data = {
@@ -286,18 +286,27 @@ class _NewMealViewState extends State<NewMealView>
   }
 
   Future<String> _addFoodByBarcode(String barcode) async {
-    /*var address = host + foodByBarcodeRoute + user.id.toString() + "/" + barcode;
-    print(address);
-    var data = {
-      "id": barcode,
-    };
-    var body = json.encode(data);
-    var res = await http.post(
-      address,
-      //body: body,
-      headers: {"Content-Type": "application/json"},
-    );
-    if (res.statusCode == 201) return res.body;*/
+    //List<FoodModel> foods = [];
+    var address =
+        "https://world.openfoodfacts.org/api/v0/product/" + barcode + ".json";
+    var data =
+        await http.get(address, headers: {"Content-Type": "application/json"});
+    //print("----------------------data-------------------");
+    //print(data.body);
+    var jsonData = json.decode(utf8.decode(data.bodyBytes));
+    print("----------------------json-------------------");
+    print(jsonData);
+    FoodModel food = FoodModel(
+        id: jsonData["id"],
+        carbohydrates: jsonData["carbohydrates"],
+        kcal: jsonData["kcal"],
+        protein: jsonData["protein"],
+        lipids: jsonData["lipids"],
+        name: jsonData["name"],
+        idDaily: 1);
+    //foods.add(food);
+    print(food);
+    if (food != null) return food.id.toString();
     return null;
   }
 
@@ -344,7 +353,7 @@ class _NewMealViewState extends State<NewMealView>
                           width: 5,
                         ),
                         GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             typeBarcode = !typeBarcode;
                             (context as Element).reassemble();
                           },
@@ -396,7 +405,7 @@ class _NewMealViewState extends State<NewMealView>
                             _formKey.currentState.save();
                             print(_barcode);
                             String res = await _addFoodByBarcode(_barcode);
-                            if (res != null){
+                            if (res != null) {
                               print(res);
                               //barcodeScanRes = res;
                               _formKey.currentState.reset();
@@ -404,11 +413,13 @@ class _NewMealViewState extends State<NewMealView>
                               backScan = false;
                               scanNotFound = false;
                               SnackBar snackbar = new SnackBar(
-                                  content: Text("Consommation enregistrée avec succès."));
+                                  content: Text(
+                                      "Consommation enregistrée avec succès."));
                               Scaffold.of(context).showSnackBar(snackbar);
                             } else {
                               scanNotFound = true;
-                              foodNotFound = "Aliment introuvable, essayez manuellement";
+                              foodNotFound =
+                                  "Aliment introuvable, essayez manuellement";
                               typeBarcode = true;
                             }
                             (context as Element).reassemble();
@@ -479,11 +490,12 @@ class _NewMealViewState extends State<NewMealView>
                         print(_lipids);
 
                         //Send to API
-                        bool res = await _addFood(_calories, _proteines, _carbohydrates,
-                            _lipids, _name);
-                        if (res){
+                        bool res = await _addFood(_calories, _proteines,
+                            _carbohydrates, _lipids, _name);
+                        if (res) {
                           SnackBar snackbar = new SnackBar(
-                              content: Text("Consommation enregistrée avec succès."));
+                              content: Text(
+                                  "Consommation enregistrée avec succès."));
                           Scaffold.of(context).showSnackBar(snackbar);
                           // nextId = nextId + 1;
                           _formKey.currentState.reset();

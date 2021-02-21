@@ -1,12 +1,88 @@
 import 'dart:ui';
 
+import 'package:diet_student/common/box_shadows.dart';
 import 'package:diet_student/common/gradient.dart';
-import 'file:///C:/Users/ndaug/StudioProjects/ceihm2-team1/diet_student/lib/components/loader.dart';
 import 'package:diet_student/mocks/daily_report_mocks.dart';
 import 'package:diet_student/mocks/food_mocks.dart';
 import 'package:diet_student/models/daily_report_model.dart';
 import 'package:diet_student/models/food_model.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+
+/*
+final List<String> imgList = [
+  'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
+  'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
+  'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
+  'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
+  'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
+  'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
+];
+   */
+
+final List<String> imgList = [
+  'images/diet-recommendation-1.jpg',
+  'images/diet-recommendation-2.jpg',
+  'images/diet-recommendation-3.jpg',
+  'images/diet-recommendation-4.jpg',
+  'images/diet-recommendation-5.jpg',
+  'images/diet-recommendation-6.jpg',
+];
+
+final List<String> textList = [
+  'Crus, cuits, en conserve ou surgelés, les fruits et légumes doivent être présents à tous les  repas. Ils peuvent aussi être consommés en dehors des repas en collation le matin ou en guise de gouter l’après-midi.',
+  'Quel que soit le type de viande, il est recommandé de consommer les morceaux les moins gras comme l’escalope, le rosbif, le blanc de volaille ou le lapin.',
+  'Côté poissons, les poissons gras sont intéressants pour leur apport en acides gras poly insaturés. Il  s’agit du saumon, de la truite, de la sardine, du maquereau etc',
+  'Les aliments apportent suffisamment de sel pour couvrir nos besoins. Il n’est donc pas utile de saler les plats avant, pendant ou après la cuisson.',
+  'Les desserts sucrés, les gâteaux, les viennoiseries, le chocolat doivent être consommés avec modération, car ils sont riches en graisses saturées et en sucres à faible index glycémique.',
+  'Pour ajouter du goût, pensez plutôt aux épices et aux aromates.',
+];
+
+final List<Widget> imageSliders = imgList.map((item) => Container(
+  child: Container(
+    /*decoration: BoxDecoration(
+      boxShadow: [disabledBox],
+    ),*/
+    margin: EdgeInsets.all(5.0),
+    child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+        child: Stack(
+          children: <Widget>[
+            Image.asset(item, fit: BoxFit.cover, width: 1000.0),
+            //Image.network(item, fit: BoxFit.cover, width: 1000.0),
+            Positioned(
+              bottom: 0.0,
+              left: 0.0,
+              right: 0.0,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color.fromARGB(200, 0, 0, 0),
+                      Color.fromARGB(0, 0, 0, 0),
+                      //Colors.lightGreen,
+                    ],
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                  ),
+                ),
+                padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
+                child: Text(
+                  textList[imgList.indexOf(item)],
+                  //'No. ${imgList.indexOf(item)} image.',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )
+    ),
+  ),
+)).toList();
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,6 +91,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   double screenWidth, screenHeight;
+  int _current = 0;
 
   List<DailyReportModel> _getDailyReport() {
     return DAILY_REPORT_MOCKS
@@ -135,7 +212,66 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget sectionTitle() {
+  Widget firstSectionTitle() {
+    return Container(
+      margin: EdgeInsets.only(bottom: 20.0),
+      child: Wrap(
+        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //spacing: screenWidth - 280, // gap between adjacent chips
+        //runSpacing: 4.0, // gap between lines
+        direction: Axis.horizontal, // main axis (rows or columns)
+        children: <Widget>[
+          Text(
+            'Recommandations du jour',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget carouselWithIndicator() {
+    return Column(
+        children: [
+          CarouselSlider(
+            items: imageSliders,
+            options: CarouselOptions(
+                autoPlay: true,
+                enlargeCenterPage: true,
+                aspectRatio: 2.0,
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    _current = index;
+                  });
+                }
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: imgList.map((url) {
+              int index = imgList.indexOf(url);
+              return Container(
+                width: 8.0,
+                height: 8.0,
+                margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _current == index
+                      ? Color.fromRGBO(0, 0, 0, 0.9)
+                      : Color.fromRGBO(0, 0, 0, 0.4),
+                ),
+              );
+            }).toList(),
+          ),
+        ]
+    );
+  }
+
+  Widget secondSectionTitle() {
     return Container(
       margin: EdgeInsets.only(bottom: 20.0),
       child: Wrap(
@@ -155,7 +291,7 @@ class _HomePageState extends State<HomePage> {
           GestureDetector(
             onTap: () {
               setState(
-                    () => {}
+                      () => {}
               );
             },
             child: Text(
@@ -304,7 +440,9 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         //Container(color: Colors.red, height: 20,)
-                        sectionTitle(),
+                        firstSectionTitle(),
+                        carouselWithIndicator(),
+                        secondSectionTitle(),
                         latestMeals(),
                       ],
                     ),
