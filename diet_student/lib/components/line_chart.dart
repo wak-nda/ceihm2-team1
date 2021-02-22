@@ -9,9 +9,9 @@ class Sales {
 }
 
 class LineChart extends StatefulWidget {
-  final int proteins;
-  final int lipids;
-  final int glucides;
+  final double proteins;
+  final double lipids;
+  final double glucides;
 
   @override
   _LineChartState createState() => _LineChartState(proteins, lipids, glucides);
@@ -21,9 +21,9 @@ class LineChart extends StatefulWidget {
 
 class _LineChartState extends State<LineChart>
     with SingleTickerProviderStateMixin {
-  final int proteins;
-  final int lipids;
-  final int glucides;
+  final double proteins;
+  final double lipids;
+  final double glucides;
   // chart
   List<charts.Series<Sales, int>> _seriesLineData;
 

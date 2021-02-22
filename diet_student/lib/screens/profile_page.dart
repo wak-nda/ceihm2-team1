@@ -15,6 +15,7 @@ final String _activities = "`Musculation, 4x par semaine, séance de 1h30";
 Widget _buildProfileImage(){
   return Center(
     child: Container(
+      margin: EdgeInsets.only(top: 25.0),
       width: 140.0,
       height: 140.0,
       decoration: BoxDecoration(
@@ -94,7 +95,8 @@ Widget _buildSectionTitle(String title){
 Widget _buildEditButton(){
   return Center(
     child: RaisedButton(
-      onPressed:(){} ,
+
+      onPressed:null ,
       child: Text('Modifier'),
       color: Colors.lightGreen,
     ),

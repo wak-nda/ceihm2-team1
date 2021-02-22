@@ -2,12 +2,15 @@ import 'dart:ui';
 
 import 'package:diet_student/common/box_shadows.dart';
 import 'package:diet_student/common/gradient.dart';
+import 'package:diet_student/common/values.dart';
 import 'package:diet_student/mocks/daily_report_mocks.dart';
 import 'package:diet_student/mocks/food_mocks.dart';
 import 'package:diet_student/models/daily_report_model.dart';
 import 'package:diet_student/models/food_model.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+
+import 'app_page.dart';
 
 /*
 final List<String> imgList = [
@@ -85,13 +88,22 @@ final List<Widget> imageSliders = imgList.map((item) => Container(
 )).toList();
 
 class HomePage extends StatefulWidget {
+  final State<AppPage> parentState;
+  final int indexPage;
+
+  const HomePage({Key key, this.parentState, this.indexPage}) : super(key: key);
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState(this.parentState, this.indexPage);
 }
 
 class _HomePageState extends State<HomePage> {
+  final State<AppPage> parentState;
+  int indexPage;
+
   double screenWidth, screenHeight;
   int _current = 0;
+
+  _HomePageState(this.parentState, this.indexPage);
 
   List<DailyReportModel> _getDailyReport() {
     return DAILY_REPORT_MOCKS
@@ -99,11 +111,11 @@ class _HomePageState extends State<HomePage> {
         .toList();
   }
 
-  List<FoodModel> _getFoods() {
+  /*List<FoodModel> _getFoods() {
     return FOOD_MOCKS
         .map((model) => FoodModel.fromMap(model))
         .toList();
-  }
+  }*/
 
   Container header() {
     return Container(
@@ -290,9 +302,13 @@ class _HomePageState extends State<HomePage> {
           ),
           GestureDetector(
             onTap: () {
-              setState(
+              //parentState._currentIndex = 1;
+              /*parentState.setState(() {
+
+              });*/
+              /*setState(
                       () => {}
-              );
+              );*/
             },
             child: Text(
               'Voir plus',
@@ -309,8 +325,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Container latestMeals() {
-    List<FoodModel> foods = _getFoods();
-    print(foods);
+    // foods = _getFoods();
+    //print(foods);
     int taille = foods.length > 2 ? foods.length-2 : 1;
     if (foods.length == 0)
       return Container(
@@ -350,10 +366,10 @@ class _HomePageState extends State<HomePage> {
                         radius: 36.0,
                       ),
                       SizedBox(
-                        width: 8.0,
+                        width: 4.0,
                       ),
                       SizedBox(
-                        width: 200,
+                        //width: 200,
                         child: RichText(
                           text: TextSpan(
                             text: foods[i].name + '\n',
@@ -371,7 +387,17 @@ class _HomePageState extends State<HomePage> {
                                 style: TextStyle(
                                   color: Colors.black45,
                                   fontWeight: FontWeight.w400,
-                                  fontSize: 15,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              TextSpan(
+                                text: 'Carbohydrates : ' +
+                                    foods[i].carbohydrates.toString() +
+                                    ' g\n',
+                                style: TextStyle(
+                                  color: Colors.black45,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
                                 ),
                               ),
                             ],
@@ -379,7 +405,43 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       SizedBox(
-                        width: screenWidth - 300,
+                        width: 4.0,
+                      ),
+                      SizedBox(
+                        //width: 200,
+                        child: RichText(
+                          text: TextSpan(
+                            text: '\n',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              height: 1.5,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: 'Protéines : ' +
+                                    foods[i].protein.toString() +
+                                    ' g\n',
+                                style: TextStyle(
+                                  color: Colors.black45,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              TextSpan(
+                                text: 'Lipides : ' +
+                                    foods[i].kcal.toString() +
+                                    ' g\n',
+                                style: TextStyle(
+                                  color: Colors.black45,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),

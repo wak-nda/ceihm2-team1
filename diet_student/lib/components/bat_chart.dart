@@ -11,9 +11,9 @@ class Pollution {
 }
 
 class BatChart extends StatefulWidget {
-  final int proteins;
-  final int lipids;
-  final int glucides;
+  final double proteins;
+  final double lipids;
+  final double glucides;
 
   @override
   _BatChartState createState() => _BatChartState(proteins, lipids, glucides);
@@ -23,9 +23,9 @@ class BatChart extends StatefulWidget {
 
 class _BatChartState extends State<BatChart>
     with SingleTickerProviderStateMixin {
-  final int proteins;
-  final int lipids;
-  final int glucides;
+  final double proteins;
+  final double lipids;
+  final double glucides;
   // chart
   List<charts.Series<Pollution, String>> _seriesData;
 

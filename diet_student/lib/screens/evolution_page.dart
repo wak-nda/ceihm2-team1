@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:diet_student/common/box_shadows.dart';
+import 'package:diet_student/common/values.dart';
+import 'package:diet_student/models/food_model.dart';
 import 'file:///C:/Users/ndaug/StudioProjects/ceihm2-team1/diet_student/lib/screens/sub_screens/seeMoreGraphs.dart';
 import 'package:flutter/material.dart';
 
@@ -27,6 +29,14 @@ class _EvolutionPageState extends State<EvolutionPage>
 
   @override
   Widget build(BuildContext context) {
+    double glucides = 0;
+    double proteines =  0;
+    double lipides = 0;
+    for(FoodModel food in foods){
+      glucides = glucides + food.carbohydrates;
+      proteines = proteines + food.protein;
+      lipides = lipides + food.lipids;
+    }
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -133,10 +143,13 @@ class _EvolutionPageState extends State<EvolutionPage>
             child: TabBarView(
               controller: _tabController,
               children: <Widget>[
-                Container(),
-                Container(),
-                Container(),
-                //SeeMoreGraphs(glucide: 25, protein: 40, lipid: 35,),
+                //Container(),
+                //Container(),
+                //Container(),
+
+                SeeMoreGraphs(glucide: glucides, protein: proteines, lipid: lipides,),
+                SeeMoreGraphs(glucide: glucides, protein: proteines, lipid: lipides,),
+                SeeMoreGraphs(glucide: glucides, protein: proteines, lipid: lipides,),
                 //SeeMoreGraphs(glucide: 5, protein: 10, lipid: 15,),
                 //SeeMoreGraphs(glucide: 65, protein: 10, lipid: 25,),
               ],

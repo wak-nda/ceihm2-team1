@@ -8,9 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 
 class SeeMoreGraphs extends StatefulWidget {
-  final int protein;
-  final int glucide;
-  final int lipid;
+  final double protein;
+  final double glucide;
+  final double lipid;
   //final List<FoodModel> foods;
 
   const SeeMoreGraphs(
@@ -29,9 +29,9 @@ class SeeMoreGraphs extends StatefulWidget {
 class _SeeMoreGraphsState extends State<SeeMoreGraphs>
     with SingleTickerProviderStateMixin {
   //DateTime _chosenDate = new DateTime.now();
-  final int protein;
-  final int glucide;
-  final int lipid;
+  final double protein;
+  final double glucide;
+  final double lipid;
   /*final List<FoodModel> foods;*/
 
   _SeeMoreGraphsState(

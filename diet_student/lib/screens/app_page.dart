@@ -34,7 +34,7 @@ class _AppPageState extends State<AppPage> {
       //print(todayTickets);
       _currentIndex = index;
       _children = [
-        HomePage(),
+        HomePage(parentState: this, indexPage: _currentIndex,),
         ConsumptionPage(),
         EvolutionPage(),
         Profile()

@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'package:diet_student/common/values.dart';
+import 'package:diet_student/components/carroussel_slider.dart';
+import 'package:diet_student/mocks/food_mocks.dart';
 import 'package:diet_student/models/food_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:uuid/uuid.dart';
 
 //--------------------------------------------------> VARIABLES
 
@@ -84,7 +87,7 @@ class _NewMealViewState extends State<NewMealView>
         int calories = int.tryParse(value);
 
         if (calories == null || calories < 0) {
-          return 'le nombre de calories doit être positif ou nul';
+          return 'le nombre de calories doit être un entier positif ou nul';
         }
 
         return null;
@@ -101,7 +104,7 @@ class _NewMealViewState extends State<NewMealView>
       decoration: InputDecoration(labelText: 'Protéines (g)'),
       keyboardType: TextInputType.number,
       validator: (String value) {
-        int proteines = int.tryParse(value);
+        double proteines = double.tryParse(value);
 
         if (proteines == null || proteines < 0) {
           return 'le nombre de protéines doit être positif ou nul';
@@ -121,7 +124,7 @@ class _NewMealViewState extends State<NewMealView>
       decoration: InputDecoration(labelText: 'Carbohydrates (g)'),
       keyboardType: TextInputType.number,
       validator: (String value) {
-        int Carbohydrates = int.tryParse(value);
+        double Carbohydrates = double.tryParse(value);
 
         if (Carbohydrates == null || Carbohydrates < 0) {
           return 'le nombre de carbohydrates doit être positif ou nul';
@@ -141,7 +144,7 @@ class _NewMealViewState extends State<NewMealView>
       decoration: InputDecoration(labelText: 'Lipides (g)'),
       keyboardType: TextInputType.number,
       validator: (String value) {
-        int Lipides = int.tryParse(value);
+        double Lipides = double.tryParse(value);
 
         if (Lipides == null || Lipides < 0) {
           return 'le nombre de lipides doit être positif ou nul';
@@ -168,7 +171,7 @@ class _NewMealViewState extends State<NewMealView>
           //typeBarcode = false;
           String res = await _addFoodByBarcode(barcodeScanRes);
           if (res != null) {
-            //barcodeScanRes = res;
+            barcodeScanRes = res;
             print(res);
             typeBarcode = false;
             backScan = false;
@@ -182,7 +185,8 @@ class _NewMealViewState extends State<NewMealView>
             typeBarcode = true;
           }
         }
-        (context as Element).reassemble();
+        // (context as Element).reassemble();
+        setState(() {});
       },
       child: Container(
         height: 50.0,
@@ -223,7 +227,8 @@ class _NewMealViewState extends State<NewMealView>
     return GestureDetector(
       onTap: () {
         manualEntry = !manualEntry;
-        (context as Element).reassemble();
+        // (context as Element).reassemble();
+        setState(() {});
       },
       child: Container(
         height: 50.0,
@@ -262,27 +267,23 @@ class _NewMealViewState extends State<NewMealView>
 
   Future<bool> _addFood(String calories, String proteins, String carbohydrates,
       String lipids, String name) async {
-    /*var address = host + foodRoute + user.id.toString();
-    print(address);
-    var data = {
-      "kcal": calories,
-      "protein": proteins,
-      "carbohydrates": carbohydrates,
-      "lipids": lipids,
-      "name": name,
-    };
-    var body = json.encode(data);
-    var res = await http.post(
-      address,
-      body: body,
-      headers: {"Content-Type": "application/json"},
-    );
-    if (res.statusCode == 201){
-      print(res.body);
-      //return res.body;
+    FoodModel food;
+    var uuid = Uuid();
+    try {
+      food = FoodModel(
+          id: uuid.v1(),
+          carbohydrates: double.parse(double.parse(carbohydrates).toStringAsFixed(2)),
+          kcal: int.parse(calories),
+          protein: double.parse(double.parse(proteins).toStringAsFixed(2)),
+          lipids: double.parse(double.parse(lipids).toStringAsFixed(2)),
+          name: name,
+          idDaily: 1);
+      foods.add(food);
       return true;
-    }*/
-    return false;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   Future<String> _addFoodByBarcode(String barcode) async {
@@ -294,19 +295,34 @@ class _NewMealViewState extends State<NewMealView>
     //print("----------------------data-------------------");
     //print(data.body);
     var jsonData = json.decode(utf8.decode(data.bodyBytes));
-    print("----------------------json-------------------");
-    print(jsonData);
-    FoodModel food = FoodModel(
-        id: jsonData["id"],
-        carbohydrates: jsonData["carbohydrates"],
-        kcal: jsonData["kcal"],
-        protein: jsonData["protein"],
-        lipids: jsonData["lipids"],
-        name: jsonData["name"],
-        idDaily: 1);
+    print("----------------------json code-------------------");
+    print(jsonData["code"]);
+    //print("----------------------json product-------------------");
+    //print(jsonData["product"]);
+    FoodModel food;
+    try {
+       food = FoodModel(
+          id: jsonData["product"]["_id"],
+          carbohydrates: double.parse((jsonData["product"]["nutriments"]["carbohydrates_100g"]).toStringAsFixed(2)),
+          kcal: jsonData["product"]["nutriments"]["energy-kcal_100g"],
+          protein: double.parse((jsonData["product"]["nutriments"]["proteins_100g"]).toStringAsFixed(2)),
+          lipids: double.parse((jsonData["product"]["nutriments"]["fat_100g"]).toStringAsFixed(2)),
+          name: jsonData["product"]["product_name"],
+          idDaily: 1);
+    } catch (e) {
+      print(e);
+      return null;
+    }
     //foods.add(food);
-    print(food);
-    if (food != null) return food.id.toString();
+    // print(food.toMap());
+    if (food.id != null && food.name != null && food.kcal != null && food.protein != null && food.carbohydrates != null && food.lipids != null) {
+      foods.add(food);
+      // FOOD_MOCKS.add(food.toMap());
+      /*FOOD_MOCKS
+          .map((model) => FoodModel.fromMap(model))
+          .toList();*/
+      return food.id.toString();
+    }
     return null;
   }
 
@@ -355,7 +371,8 @@ class _NewMealViewState extends State<NewMealView>
                         GestureDetector(
                           onTap: () {
                             typeBarcode = !typeBarcode;
-                            (context as Element).reassemble();
+                            // (context as Element).reassemble();
+                            setState(() {});
                           },
                           child: Text(
                             "Saisir",
@@ -407,7 +424,7 @@ class _NewMealViewState extends State<NewMealView>
                             String res = await _addFoodByBarcode(_barcode);
                             if (res != null) {
                               print(res);
-                              //barcodeScanRes = res;
+                              barcodeScanRes = res;
                               _formKey.currentState.reset();
                               typeBarcode = false;
                               backScan = false;
@@ -422,7 +439,8 @@ class _NewMealViewState extends State<NewMealView>
                                   "Aliment introuvable, essayez manuellement";
                               typeBarcode = true;
                             }
-                            (context as Element).reassemble();
+                            //(context as Element).reassemble();
+                            setState(() {});
                           },
                           child: Icon(
                             FontAwesomeIcons.arrowCircleRight,
@@ -503,7 +521,8 @@ class _NewMealViewState extends State<NewMealView>
                           backScan = false;
                           scanNotFound = false;
                           manualEntry = false;
-                          (context as Element).reassemble();
+                          // (context as Element).reassemble();
+                          setState(() {});
                         }
                       },
                     ),

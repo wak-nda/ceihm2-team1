@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class FoodModel {
-  final int id;
+  final String id;
   final int kcal;
-  final int protein;
-  final int carbohydrates;
-  final int lipids;
+  final double protein;
+  final double carbohydrates;
+  final double lipids;
   final String name;
   final int idDaily;
 
@@ -17,7 +17,7 @@ class FoodModel {
     this.lipids,
     this.name,
     this.idDaily
-  })  : assert(id != null);
+  });
 
   FoodModel.fromMap(Map<String, dynamic> map)
       : id = map["id"],
@@ -37,4 +37,9 @@ class FoodModel {
     "name": name,
     "idDaily": idDaily,
   };
+
+  @override
+  String toString() {
+    return "id: " + id + ", name: " + name + ", kcal: " + kcal.toString() + ", protein: " + protein.toString() + ", carbohydrates: " + carbohydrates.toString() + ", lipids: " + lipids.toString() + ", idDaily: " + idDaily.toString();
+  }
 }
