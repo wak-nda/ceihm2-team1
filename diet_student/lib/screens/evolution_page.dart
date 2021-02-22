@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:diet_student/common/box_shadows.dart';
 import 'package:diet_student/common/values.dart';
 import 'package:diet_student/models/food_model.dart';
-import 'file:///C:/Users/ndaug/StudioProjects/ceihm2-team1/diet_student/lib/screens/sub_screens/seeMoreGraphs.dart';
+import 'package:diet_student/screens/sub_screens/seeMoreGraphs.dart';
 import 'package:flutter/material.dart';
 
 class EvolutionPage extends StatefulWidget {
